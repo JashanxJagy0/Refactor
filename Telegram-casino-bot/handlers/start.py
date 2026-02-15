@@ -1,10 +1,22 @@
 """
 Start command and main menu handlers
 """
+from __future__ import annotations
 import logging
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import ContextTypes
-from telegram.constants import ParseMode
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+    from telegram.ext import ContextTypes
+    from telegram.constants import ParseMode
+else:
+    try:
+        from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+        from telegram.ext import ContextTypes
+        from telegram.constants import ParseMode
+    except ImportError:
+        pass
+
 from core import initialize_user_data, get_user_data, save_user_data
 from utils import get_text, check_banned, check_maintenance
 from config import BOT_OWNER_ID, LINK_CHANNEL, LINK_CHAT, LINK_SUPPORT
@@ -12,7 +24,7 @@ from config import BOT_OWNER_ID, LINK_CHANNEL, LINK_CHAT, LINK_SUPPORT
 
 @check_banned
 @check_maintenance
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
     """Handle /start command - Main entry point"""
     user = update.effective_user
     user_id = user.id
@@ -77,7 +89,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"User {user_id} ({user.username}) started the bot")
 
 
-async def main_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def main_menu_callback(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
     """Handle main menu callback - Return to main menu"""
     query = update.callback_query
     await query.answer()

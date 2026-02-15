@@ -3,10 +3,16 @@ Helper utilities for the bot
 Currency conversion, formatting, parsing, and other common functions
 """
 from typing import Tuple, Dict, Optional
-from PIL import Image, ImageDraw
 from config import CURRENCY_RATES, CURRENCY_SYMBOLS
 from core.state import user_wallets, user_stats, game_sessions
 from core.bot_settings import bot_settings
+
+# Optional PIL import for image processing
+try:
+    from PIL import Image, ImageDraw
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
 
 # Default language
 DEFAULT_LANG = "en"
@@ -167,8 +173,11 @@ def set_menu_owner(message, user_id: int):
 
 # ===== IMAGE PROCESSING =====
 
-def create_circular_mask(image_size: Tuple[int, int]) -> Image:
+def create_circular_mask(image_size: Tuple[int, int]):
     """Create a circular mask for profile pictures"""
+    if not PIL_AVAILABLE:
+        raise ImportError("PIL (Pillow) is required for image processing")
+    
     mask = Image.new('L', image_size, 0)
     draw = ImageDraw.Draw(mask)
     draw.ellipse((0, 0, image_size[0], image_size[1]), fill=255)

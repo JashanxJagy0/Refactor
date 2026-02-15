@@ -4,13 +4,25 @@ Supports both Perplexity AI (paid) and g4f (free)
 """
 import logging
 from typing import Optional, List, Dict
-from openai import OpenAI
-import g4f
+
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+    OpenAI = None
+
+try:
+    import g4f
+    G4F_AVAILABLE = True
+except ImportError:
+    G4F_AVAILABLE = False
+
 from config import PERPLEXITY_API_KEY
 
 # Initialize Perplexity client
 perplexity_client = None
-if PERPLEXITY_API_KEY and PERPLEXITY_API_KEY != "[REDACTED]":
+if OPENAI_AVAILABLE and PERPLEXITY_API_KEY and PERPLEXITY_API_KEY != "[REDACTED]":
     try:
         perplexity_client = OpenAI(
             api_key=PERPLEXITY_API_KEY,
@@ -47,6 +59,10 @@ async def chat_with_perplexity(messages: List[Dict[str, str]]) -> Optional[str]:
     Returns:
         AI response text or None on error
     """
+    if not OPENAI_AVAILABLE:
+        logging.warning("openai library not available")
+        return None
+    
     if not perplexity_client:
         logging.warning("Perplexity client not initialized")
         return None
@@ -72,6 +88,10 @@ async def chat_with_g4f(messages: List[Dict[str, str]]) -> Optional[str]:
     Returns:
         AI response text or None on error
     """
+    if not G4F_AVAILABLE:
+        logging.warning("g4f library not available")
+        return None
+    
     try:
         response = await g4f.ChatCompletion.create_async(
             model="gpt-3.5-turbo",

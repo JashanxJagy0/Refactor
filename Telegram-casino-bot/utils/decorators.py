@@ -2,10 +2,21 @@
 Decorators for command handlers
 Provides security and validation checks
 """
+from __future__ import annotations
 import functools
 import logging
-from telegram import Update
-from telegram.ext import ContextTypes
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from telegram import Update
+    from telegram.ext import ContextTypes
+else:
+    try:
+        from telegram import Update
+        from telegram.ext import ContextTypes
+    except ImportError:
+        pass
+
 from core.state import user_stats
 from core.bot_settings import is_maintenance_mode
 from config import BOT_OWNER_ID
@@ -14,7 +25,7 @@ from config import BOT_OWNER_ID
 def check_banned(func):
     """Decorator to check if user is banned before executing command"""
     @functools.wraps(func)
-    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+    async def wrapper(update: "Update", context: "ContextTypes.DEFAULT_TYPE", *args, **kwargs):
         user_id = update.effective_user.id
         
         # Check if user is banned
@@ -32,7 +43,7 @@ def check_banned(func):
 def check_maintenance(func):
     """Decorator to check if bot is in maintenance mode"""
     @functools.wraps(func)
-    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+    async def wrapper(update: "Update", context: "ContextTypes.DEFAULT_TYPE", *args, **kwargs):
         user_id = update.effective_user.id
         
         # Allow owner to use bot during maintenance
@@ -50,7 +61,7 @@ def check_maintenance(func):
 def admin_only(func):
     """Decorator to restrict command to bot owner only"""
     @functools.wraps(func)
-    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+    async def wrapper(update: "Update", context: "ContextTypes.DEFAULT_TYPE", *args, **kwargs):
         user_id = update.effective_user.id
         
         if user_id != BOT_OWNER_ID:
@@ -67,7 +78,7 @@ def admin_only(func):
 def private_chat_only(func):
     """Decorator to restrict command to private chats only"""
     @functools.wraps(func)
-    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+    async def wrapper(update: "Update", context: "ContextTypes.DEFAULT_TYPE", *args, **kwargs):
         if update.effective_chat.type != "private":
             await update.message.reply_text(
                 "❌ This command can only be used in private chat with the bot."
@@ -81,7 +92,7 @@ def private_chat_only(func):
 def group_chat_only(func):
     """Decorator to restrict command to group chats only"""
     @functools.wraps(func)
-    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE, *args, **kwargs):
+    async def wrapper(update: "Update", context: "ContextTypes.DEFAULT_TYPE", *args, **kwargs):
         if update.effective_chat.type == "private":
             await update.message.reply_text(
                 "❌ This command can only be used in group chats."

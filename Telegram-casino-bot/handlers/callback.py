@@ -2,12 +2,22 @@
 Generic callback query router
 Routes callbacks to appropriate handlers
 """
+from __future__ import annotations
 import logging
-from telegram import Update
-from telegram.ext import ContextTypes
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from telegram import Update
+    from telegram.ext import ContextTypes
+else:
+    try:
+        from telegram import Update
+        from telegram.ext import ContextTypes
+    except ImportError:
+        pass
 
 
-async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def callback_query_handler(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
     """
     Main callback query router
     Routes callbacks to appropriate feature handlers
@@ -48,7 +58,7 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
     await query.answer("Unknown action")
 
 
-async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def error_handler(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
     """Handle errors in the bot"""
     logging.error(f"Update {update} caused error {context.error}")
     
