@@ -26,8 +26,40 @@ except ImportError:
     DICEROLL_AVAILABLE = False
     diceroll_game = None
 
+try:
+    from features.games.house_games.tower import tower_game
+    TOWER_AVAILABLE = True
+except ImportError:
+    TOWER_AVAILABLE = False
+    tower_game = None
+
+try:
+    from features.games.house_games.roulette import roulette_game
+    ROULETTE_AVAILABLE = True
+except ImportError:
+    ROULETTE_AVAILABLE = False
+    roulette_game = None
+
+try:
+    from features.games.house_games.slots import slots_game
+    SLOTS_AVAILABLE = True
+except ImportError:
+    SLOTS_AVAILABLE = False
+    slots_game = None
+
+try:
+    from features.games.house_games.keno import keno_game
+    KENO_AVAILABLE = True
+except ImportError:
+    KENO_AVAILABLE = False
+    keno_game = None
+
 __all__ = [
     'mines_game', 'MINES_AVAILABLE',
     'coinflip_game', 'COINFLIP_AVAILABLE',
-    'diceroll_game', 'DICEROLL_AVAILABLE'
+    'diceroll_game', 'DICEROLL_AVAILABLE',
+    'tower_game', 'TOWER_AVAILABLE',
+    'roulette_game', 'ROULETTE_AVAILABLE',
+    'slots_game', 'SLOTS_AVAILABLE',
+    'keno_game', 'KENO_AVAILABLE',
 ]

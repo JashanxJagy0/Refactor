@@ -54,8 +54,32 @@ def register_all_games():
     except ImportError:
         pass
     
+    try:
+        from features.games.house_games.tower import tower_game
+        game_registry.register(tower_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.roulette import roulette_game
+        game_registry.register(roulette_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.slots import slots_game
+        game_registry.register(slots_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.keno import keno_game
+        game_registry.register(keno_game)
+    except ImportError:
+        pass
+    
     # More games will be registered as they're implemented
-    # TODO: Register other games
+    # TODO: Register emoji games
 
 
 # Register games on import

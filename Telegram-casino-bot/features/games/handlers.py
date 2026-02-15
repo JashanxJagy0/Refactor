@@ -84,6 +84,102 @@ async def diceroll_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE
     await diceroll_game.start_game(update, context, bet_amount, prediction)
 
 
+@check_banned
+@check_maintenance
+async def tower_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /tower command"""
+    from features.games.house_games.tower import tower_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text(
+            "Usage: /tower <bet_amount> [difficulty]\n"
+            "Difficulty: easy, medium (default), hard\n"
+            "Example: /tower 1.50 hard"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+        difficulty = context.args[1] if len(context.args) > 1 else 'medium'
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await tower_game.start_game(update, context, bet_amount, difficulty)
+
+
+@check_banned
+@check_maintenance
+async def roulette_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /roulette command"""
+    from features.games.house_games.roulette import roulette_game
+    
+    if not context.args or len(context.args) < 2:
+        await update.message.reply_text(
+            "Usage: /roulette <bet_amount> <bet_type> [number]\n"
+            "Bet types: single (0-36), red, black, even, odd, low, high\n"
+            "Example: /roulette 1.50 red\n"
+            "Example: /roulette 1.50 single 17"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+        bet_type = context.args[1].lower()
+        bet_value = int(context.args[2]) if len(context.args) > 2 else None
+    except ValueError:
+        await update.message.reply_text("❌ Invalid parameters")
+        return
+    
+    await roulette_game.start_game(update, context, bet_amount, bet_type, bet_value)
+
+
+@check_banned
+@check_maintenance
+async def slots_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /slots command"""
+    from features.games.house_games.slots import slots_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text(
+            "Usage: /slots <bet_amount>\n"
+            "Example: /slots 1.50"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await slots_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def keno_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /keno command"""
+    from features.games.house_games.keno import keno_game
+    
+    if not context.args or len(context.args) < 2:
+        await update.message.reply_text(
+            "Usage: /keno <bet_amount> <numbers...>\n"
+            "Pick 1-8 numbers (1-80)\n"
+            "Example: /keno 1.50 5 12 23 45 67"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+        numbers = [int(n) for n in context.args[1:]]
+    except ValueError:
+        await update.message.reply_text("❌ Invalid parameters")
+        return
+    
+    await keno_game.start_game(update, context, bet_amount, numbers)
+
+
 async def game_callback_router(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
     """Route game callbacks to appropriate game handlers"""
     query = update.callback_query
@@ -96,6 +192,9 @@ async def game_callback_router(update: "Update", context: "ContextTypes.DEFAULT_
     elif data.startswith("flip_"):
         from features.games.house_games.coinflip import coinflip_game
         await coinflip_game.handle_callback(update, context)
+    elif data.startswith("tower_"):
+        from features.games.house_games.tower import tower_game
+        await tower_game.handle_callback(update, context)
     # Add more game routing as games are implemented
     else:
         await query.answer("Unknown game action")
@@ -109,4 +208,12 @@ GAME_COMMAND_HANDLERS = {
     "coinflip": coinflip_command,
     "dice": diceroll_command,
     "d": diceroll_command,  # Alias
+    "tower": tower_command,
+    "tw": tower_command,  # Alias
+    "roulette": roulette_command,
+    "ru": roulette_command,  # Alias
+    "slots": slots_command,
+    "sl": slots_command,  # Alias
+    "keno": keno_command,
+    "k": keno_command,  # Alias
 }
