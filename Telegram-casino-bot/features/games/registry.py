@@ -78,6 +78,24 @@ def register_all_games():
     except ImportError:
         pass
     
+    try:
+        from features.games.house_games.blackjack import blackjack_game
+        game_registry.register(blackjack_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.hilow import hilow_game
+        game_registry.register(hilow_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.predict import predict_game
+        game_registry.register(predict_game)
+    except ImportError:
+        pass
+    
     # Import and register single emoji games
     try:
         from features.games.emoji_games.single_emoji import (

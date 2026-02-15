@@ -54,6 +54,27 @@ except ImportError:
     KENO_AVAILABLE = False
     keno_game = None
 
+try:
+    from features.games.house_games.blackjack import blackjack_game
+    BLACKJACK_AVAILABLE = True
+except ImportError:
+    BLACKJACK_AVAILABLE = False
+    blackjack_game = None
+
+try:
+    from features.games.house_games.hilow import hilow_game
+    HILOW_AVAILABLE = True
+except ImportError:
+    HILOW_AVAILABLE = False
+    hilow_game = None
+
+try:
+    from features.games.house_games.predict import predict_game
+    PREDICT_AVAILABLE = True
+except ImportError:
+    PREDICT_AVAILABLE = False
+    predict_game = None
+
 __all__ = [
     'mines_game', 'MINES_AVAILABLE',
     'coinflip_game', 'COINFLIP_AVAILABLE',
@@ -62,4 +83,7 @@ __all__ = [
     'roulette_game', 'ROULETTE_AVAILABLE',
     'slots_game', 'SLOTS_AVAILABLE',
     'keno_game', 'KENO_AVAILABLE',
+    'blackjack_game', 'BLACKJACK_AVAILABLE',
+    'hilow_game', 'HILOW_AVAILABLE',
+    'predict_game', 'PREDICT_AVAILABLE',
 ]

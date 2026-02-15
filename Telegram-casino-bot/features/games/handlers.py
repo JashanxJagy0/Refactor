@@ -195,9 +195,85 @@ async def game_callback_router(update: "Update", context: "ContextTypes.DEFAULT_
     elif data.startswith("tower_"):
         from features.games.house_games.tower import tower_game
         await tower_game.handle_callback(update, context)
+    elif data.startswith("bj_"):
+        from features.games.house_games.blackjack import blackjack_game
+        await blackjack_game.handle_callback(update, context)
+    elif data.startswith("hl_"):
+        from features.games.house_games.hilow import hilow_game
+        await hilow_game.handle_callback(update, context)
     # Add more game routing as games are implemented
     else:
         await query.answer("Unknown game action")
+
+
+@check_banned
+@check_maintenance
+async def blackjack_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /blackjack command"""
+    from features.games.house_games.blackjack import blackjack_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text(
+            "Usage: /blackjack <bet_amount>\n"
+            "Aliases: /bj\n"
+            "Example: /bj 1.50"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await blackjack_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def hilow_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /hilow command"""
+    from features.games.house_games.hilow import hilow_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text(
+            "Usage: /hilow <bet_amount>\n"
+            "Aliases: /hl\n"
+            "Example: /hl 1.50"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await hilow_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def predict_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /predict command"""
+    from features.games.house_games.predict import predict_game
+    
+    if not context.args or len(context.args) < 2:
+        await update.message.reply_text(
+            "Usage: /predict <bet_amount> <up/down>\n"
+            "Predict if dice will be UP (4-6) or DOWN (1-3)\n"
+            "Example: /predict 1.50 up"
+        )
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+        direction = context.args[1].lower()
+    except (ValueError, IndexError):
+        await update.message.reply_text("❌ Invalid parameters")
+        return
+    
+    await predict_game.start_game(update, context, bet_amount, direction)
 
 
 @check_banned
@@ -311,6 +387,11 @@ GAME_COMMAND_HANDLERS = {
     "sl": slots_command,  # Alias
     "keno": keno_command,
     "k": keno_command,  # Alias
+    "blackjack": blackjack_command,
+    "bj": blackjack_command,  # Alias
+    "hilow": hilow_command,
+    "hl": hilow_command,  # Alias
+    "predict": predict_command,
     "edarts": emoji_darts_command,
     "esoccer": emoji_soccer_command,
     "ebasket": emoji_basketball_command,
