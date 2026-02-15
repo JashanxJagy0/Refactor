@@ -200,6 +200,101 @@ async def game_callback_router(update: "Update", context: "ContextTypes.DEFAULT_
         await query.answer("Unknown game action")
 
 
+@check_banned
+@check_maintenance
+async def emoji_darts_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /edarts command"""
+    from features.games.emoji_games.single_emoji import darts_single_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text("Usage: /edarts <bet_amount>\nExample: /edarts 1.50")
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await darts_single_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def emoji_soccer_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /esoccer command"""
+    from features.games.emoji_games.single_emoji import soccer_single_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text("Usage: /esoccer <bet_amount>\nExample: /esoccer 1.50")
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await soccer_single_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def emoji_basketball_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /ebasket command"""
+    from features.games.emoji_games.single_emoji import basketball_single_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text("Usage: /ebasket <bet_amount>\nExample: /ebasket 1.50")
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await basketball_single_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def emoji_bowling_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /ebowl command"""
+    from features.games.emoji_games.single_emoji import bowling_single_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text("Usage: /ebowl <bet_amount>\nExample: /ebowl 1.50")
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await bowling_single_game.start_game(update, context, bet_amount)
+
+
+@check_banned
+@check_maintenance
+async def emoji_slot_command(update: "Update", context: "ContextTypes.DEFAULT_TYPE"):
+    """Handle /eslot command"""
+    from features.games.emoji_games.single_emoji import slot_single_game
+    
+    if not context.args or len(context.args) < 1:
+        await update.message.reply_text("Usage: /eslot <bet_amount>\nExample: /eslot 1.50")
+        return
+    
+    try:
+        bet_amount = float(context.args[0])
+    except ValueError:
+        await update.message.reply_text("❌ Invalid bet amount")
+        return
+    
+    await slot_single_game.start_game(update, context, bet_amount)
+
+
 # Command handlers mapping for easy registration
 GAME_COMMAND_HANDLERS = {
     "mines": mines_command,
@@ -216,4 +311,9 @@ GAME_COMMAND_HANDLERS = {
     "sl": slots_command,  # Alias
     "keno": keno_command,
     "k": keno_command,  # Alias
+    "edarts": emoji_darts_command,
+    "esoccer": emoji_soccer_command,
+    "ebasket": emoji_basketball_command,
+    "ebowl": emoji_bowling_command,
+    "eslot": emoji_slot_command,
 }

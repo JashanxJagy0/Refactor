@@ -78,8 +78,19 @@ def register_all_games():
     except ImportError:
         pass
     
-    # More games will be registered as they're implemented
-    # TODO: Register emoji games
+    # Import and register single emoji games
+    try:
+        from features.games.emoji_games.single_emoji import (
+            darts_single_game, soccer_single_game, basketball_single_game,
+            bowling_single_game, slot_single_game
+        )
+        game_registry.register(darts_single_game)
+        game_registry.register(soccer_single_game)
+        game_registry.register(basketball_single_game)
+        game_registry.register(bowling_single_game)
+        game_registry.register(slot_single_game)
+    except ImportError:
+        pass
 
 
 # Register games on import
