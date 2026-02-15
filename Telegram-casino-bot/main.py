@@ -63,6 +63,11 @@ def register_handlers(application: Application):
     # Command handlers
     application.add_handler(CommandHandler("start", start_command))
     
+    # Game command handlers (Phase 2)
+    from features.games.handlers import GAME_COMMAND_HANDLERS
+    for command, handler in GAME_COMMAND_HANDLERS.items():
+        application.add_handler(CommandHandler(command, handler))
+    
     # Callback query handler (routes to specific handlers)
     application.add_handler(CallbackQueryHandler(callback_query_handler))
     

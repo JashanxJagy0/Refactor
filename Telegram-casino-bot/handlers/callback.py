@@ -39,9 +39,9 @@ async def callback_query_handler(update: "Update", context: "ContextTypes.DEFAUL
         return
     
     # Games callbacks (Phase 2)
-    if data.startswith("game_"):
-        await query.answer("Game features coming in Phase 2!")
-        return
+    if data.startswith("game_") or data.startswith("mines_"):
+        from features.games.handlers import game_callback_router
+        return await game_callback_router(update, context)
     
     # Bank/deposit callbacks (Phase 3)
     if data.startswith("bank_") or data.startswith("deposit_"):
