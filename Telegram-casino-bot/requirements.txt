@@ -1,0 +1,15 @@
+python-telegram-bot
+web3
+eth-account
+eth-keys
+httpx
+openai
+g4f
+bip_utils
+qrcode
+Pillow
+solana
+solders
+tronpy
+base58
+pytoniq-core
