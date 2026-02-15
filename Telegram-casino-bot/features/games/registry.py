@@ -42,6 +42,18 @@ def register_all_games():
     except ImportError:
         pass
     
+    try:
+        from features.games.house_games.coinflip import coinflip_game
+        game_registry.register(coinflip_game)
+    except ImportError:
+        pass
+    
+    try:
+        from features.games.house_games.diceroll import diceroll_game
+        game_registry.register(diceroll_game)
+    except ImportError:
+        pass
+    
     # More games will be registered as they're implemented
     # TODO: Register other games
 

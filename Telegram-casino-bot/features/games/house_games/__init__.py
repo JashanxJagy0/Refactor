@@ -12,4 +12,22 @@ except ImportError:
     MINES_AVAILABLE = False
     mines_game = None
 
-__all__ = ['mines_game', 'MINES_AVAILABLE']
+try:
+    from features.games.house_games.coinflip import coinflip_game
+    COINFLIP_AVAILABLE = True
+except ImportError:
+    COINFLIP_AVAILABLE = False
+    coinflip_game = None
+
+try:
+    from features.games.house_games.diceroll import diceroll_game
+    DICEROLL_AVAILABLE = True
+except ImportError:
+    DICEROLL_AVAILABLE = False
+    diceroll_game = None
+
+__all__ = [
+    'mines_game', 'MINES_AVAILABLE',
+    'coinflip_game', 'COINFLIP_AVAILABLE',
+    'diceroll_game', 'DICEROLL_AVAILABLE'
+]
